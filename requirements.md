@@ -41,11 +41,11 @@ To assist with the completion, here are some suggested steps to prepare common p
 
 ### Install:
 
-	1. Install Docker CE
-     - Mac: https://docs.docker.com/docker-for-mac/install/
-     - Windows: https://docs.docker.com/docker-for-windows/install/
-     - Ubuntu: https://docs.docker.com/install/linux/docker-ce/ubuntu/
-     - CentOs: https://docs.docker.com/install/linux/docker-ce/centos/
-	2. Clone Repository:
-    - Download: https://github.com/cisco-ie/ez-dash/archive/master.zip
-    - Git Clone: https://github.com/cisco-ie/ez-dash.git
+1. Install Docker CE
+   - Mac: https://docs.docker.com/docker-for-mac/install/
+   - Windows: https://docs.docker.com/docker-for-windows/install/
+   - Ubuntu: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+   - CentOs: https://docs.docker.com/install/linux/docker-ce/centos/
+2. Clone Repository:
+   - Download: https://github.com/cisco-ie/ez-dash/archive/master.zip
+   - Git Clone: https://github.com/cisco-ie/ez-dash.git
