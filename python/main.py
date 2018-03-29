@@ -5,6 +5,7 @@ import math
 import time
 import datetime
 import random
+import sys
 
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 
@@ -15,8 +16,14 @@ def main():
     """
     # influx_controller = InfluxController()
     # influx_controller.setup_db()
-    prometheus_server()
-    threading.Thread(target=influx_server).start()
+    try:
+        print("Starting Prometheus Server")
+        prometheus_server()
+        print("Starting Influx Server")
+        t = threading.Thread(target=influx_server)
+        t.start()
+    except KeyboardInterrupt:
+        sys.exit()
 
 
 def prometheus_server():
