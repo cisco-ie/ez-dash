@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker stack rm ezdash
+docker stack rm ez-dash
