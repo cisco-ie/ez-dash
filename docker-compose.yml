@@ -12,6 +12,23 @@ services:
         - "9300:9300"
       environment:
         - discovery.type=single-node
+        - http.port=9200
+        - http.cors.allow-origin="*"
+        - http.cors.enabled=true
+        - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+        - http.cors.allow-credentials=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - bootstrap.memory_lock=true
+    filebeat:
+      image: ez-dash/filebeat
+      volumes:
+        - "./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+        - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    dejavu:
+      image: appbaseio/dejavu
+      ports:
+        - "1358:1358"
     prometheus:
       image: prom/prometheus
       volumes:
@@ -24,7 +41,6 @@ services:
       ports:
         - "3000:3000"
     python_app:
-      build: python
       image: ez-dash/python
       stdin_open: true
       tty: true
