@@ -4,6 +4,8 @@ datasources:
   type: influxdb
   access: proxy
   url: http://influxdb:8086
+  user: devnet
+  password: create
   isDefault: true
 - name: ElasticSearch
   type: elasticsearch
