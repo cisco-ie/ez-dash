@@ -1,9 +1,7 @@
-from influxdb import InfluxDBClient
 from prometheus_client import start_http_server, Summary
 import threading
 import math
 import time
-import datetime
 import random
 import sys
 import http.client
@@ -61,11 +59,10 @@ class InfluxController():
         res = self.conn.getresponse()
         data = res.read()
         # print(res.code)
-        # print(data.decode("utf-8"))
+        print(data.decode("utf-8"))
 
     def format_data(self, key, value):
-        now = datetime.datetime.today()
-        timestamp = int(time.time())*1000000000
+        timestamp = int(time.time()) * 1000000000
         data = "{},host=python value={} {}".format(key, value, timestamp)
         # print(data)
         return data
