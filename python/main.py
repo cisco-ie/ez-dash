@@ -6,6 +6,7 @@ import time
 import datetime
 import random
 import sys
+import http.client
 
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 
@@ -14,14 +15,14 @@ def main():
     """
     Runs all functions required for exposing
     """
-    # influx_controller = InfluxController()
-    # influx_controller.setup_db()
+
     try:
         print("Starting Prometheus Server")
         prometheus_server()
         print("Starting Influx Server")
         t = threading.Thread(target=influx_server)
         t.start()
+
     except KeyboardInterrupt:
         sys.exit()
 
@@ -32,10 +33,10 @@ def prometheus_server():
 
 def influx_server():
     count = 1
-    # influx_controller = InfluxController()
+    influx_controller = InfluxController('influxdb:8086')
     while True:
         stat_1, stat_2 = stat_creation(count)
-        # influx_controller.send_data(stat_1, stat_2, count)
+        influx_controller.send_data(stat_1, stat_2, count)
         count += 1
         time.sleep(1)
 
@@ -48,40 +49,31 @@ def stat_creation(i):
 
 
 class InfluxController():
-    def __init__(self, host='influxdb', port=8086, user='root', password='root', dbname='tutorial'):
-        """
-        Need to add in static route
-        """
+    def __init__(self, url, dbname='tutorial'):
         self.dbname = dbname
-        self.client = InfluxDBClient(host, port, user, password, dbname)
+        self.conn = http.client.HTTPConnection(url)
 
-    def setup_db(self):
-        self.client.create_database(self.dbname)
-
-    def write_to_db(self, points):
-        self.client.switch_database(self.dbname)
-        self.write_points(points)
-
-    def format_data(self, metric, value):
-        now = datetime.datetime.today()
-        point = {
-            "measurement": metric,
-            "time": int(now.strftime('%s')),
-            "fields": {
-                "value": value
-            }
+    def write(self, payload):
+        headers = {
+            'authorization': "Basic ZGV2bmV0OmNyZWF0ZQ=="
         }
-        return point
+        self.conn.request("POST", "/write?db={}".format(self.dbname), payload, headers)
+        res = self.conn.getresponse()
+        data = res.read()
+        # print(res.code)
+        # print(data.decode("utf-8"))
+
+    def format_data(self, key, value):
+        now = datetime.datetime.today()
+        timestamp = int(time.time())*1000000000
+        data = "{},host=python value={} {}".format(key, value, timestamp)
+        # print(data)
+        return data
 
     def send_data(self, stat_1, stat_2, stat_3):
-        points = []
-        points.append(self.format_data('app_data.stat_1', stat_1))
-        points.append(self.format_data('app_data.stat_2', stat_2))
-        points.append(self.format_data('app_data.entries_counter', stat_3))
-        self.write_to_db(points)
-
-    def cleanup(self):
-        self.client.drop_database(self.dbname)
+        self.write(self.format_data('stat_1', stat_1))
+        self.write(self.format_data('stat_2', stat_2))
+        self.write(self.format_data('entriest_counter', stat_3))
 
 
 if __name__ == '__main__':
