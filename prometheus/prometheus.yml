@@ -1,22 +1,14 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 30s
-  scrape_timeout: 10s
+  scrape_interval: 5s
   external_labels:
     monitor: devnetcreate
 
-rule_files:
-- "rules.d/*.rule"
-
 scrape_configs:
-  - job_name: example_app
+  - job_name: python_app
     honor_labels: true
-    scrape_interval: 10s
     static_configs:
       - targets: ['python_app:9091']
 
   - job_name: prometheus
-    scrape_interval: 10s
     static_configs:
       - targets: ['localhost:9090']
-
