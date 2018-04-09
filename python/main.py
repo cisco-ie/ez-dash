@@ -47,7 +47,7 @@ def stat_creation(i):
 
 
 class InfluxController():
-    def __init__(self, url, dbname='tutorial'):
+    def __init__(self, url, dbname='ezdash'):
         self.dbname = dbname
         self.conn = http.client.HTTPConnection(url)
 
