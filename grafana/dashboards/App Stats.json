@@ -1,4 +1,54 @@
 {
+  "__inputs": [
+    {
+      "name": "Prometheus",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    },
+    {
+      "name": "InfluxDB",
+      "label": "InfluxDB",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "5.0.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": "5.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "5.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "singlestat",
+      "name": "Singlestat",
+      "version": "5.0.0"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -15,7 +65,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -48,12 +98,10 @@
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:1421",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:1422",
           "name": "range to text",
           "value": 2
         }
@@ -81,7 +129,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:1129",
           "expr": "python_info",
           "format": "time_series",
           "groupBy": [
@@ -128,7 +175,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "$$hashKey": "object:1424",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -166,12 +212,10 @@
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:1776",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:1777",
           "name": "range to text",
           "value": 2
         }
@@ -199,7 +243,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:1722",
           "expr": "python_info",
           "format": "time_series",
           "groupBy": [
@@ -245,7 +288,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "$$hashKey": "object:1779",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -283,12 +325,10 @@
       "mappingType": 1,
       "mappingTypes": [
         {
-          "$$hashKey": "object:1776",
           "name": "value to text",
           "value": 1
         },
         {
-          "$$hashKey": "object:1777",
           "name": "range to text",
           "value": 2
         }
@@ -316,7 +356,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:1722",
           "expr": "(time() - process_start_time_seconds{job=\"example_app\"})",
           "format": "time_series",
           "groupBy": [
@@ -362,7 +401,6 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
-          "$$hashKey": "object:1779",
           "op": "=",
           "text": "N/A",
           "value": "null"
@@ -432,7 +470,6 @@
       "tableColumn": "",
       "targets": [
         {
-          "$$hashKey": "object:1963",
           "expr": "python_info",
           "format": "time_series",
           "groupBy": [
@@ -522,7 +559,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "$$hashKey": "object:2829",
           "expr": "request_processing_seconds_count",
           "format": "time_series",
           "groupBy": [
@@ -635,7 +671,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "$$hashKey": "object:2904",
           "expr": "request_processing_seconds_sum",
           "format": "time_series",
           "instant": false,
@@ -662,7 +697,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:2994",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -671,7 +705,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:2995",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -846,7 +879,7 @@
         "#052b51",
         "#d44a3a"
       ],
-      "datasource": null,
+      "datasource": "InfluxDB",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -948,7 +981,7 @@
       "valueName": "avg"
     }
   ],
-  "refresh": false,
+  "refresh": "5s",
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
@@ -956,7 +989,7 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -987,5 +1020,5 @@
   "timezone": "",
   "title": "App Stats",
   "uid": "ZUJ6oEiik",
-  "version": 2
+  "version": 1
 }
