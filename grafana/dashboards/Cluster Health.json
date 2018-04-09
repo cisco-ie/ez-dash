@@ -27,6 +27,12 @@
       "id": "graph",
       "name": "Graph",
       "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "jdbranham-diagram-panel",
+      "name": "Diagram",
+      "version": "1.4.4"
     }
   ],
   "annotations": {
@@ -49,6 +55,338 @@
   "links": [],
   "panels": [
     {
+      "colors": [
+        "rgba(50, 172, 45, 0.97)",
+        "rgba(237, 129, 40, 0.89)",
+        "rgba(245, 54, 54, 0.9)"
+      ],
+      "composites": [],
+      "content": "graph LR\nez-dash_python_app --> ez-dash_influxdb\nez-dash_python_app --> ez-dash_prometheus\nez-dash_metricbeat --> ez-dash_elasticsearch\nez-dash_elasticsearch --> ez-dash_grafana\nez-dash_elasticsearch --> ez-dash_kibana\nez-dash_influxdb --> ez-dash_grafana\nez-dash_prometheus --> ez-dash_grafana\n\n",
+      "datasource": "ElasticSearch",
+      "decimals": 2,
+      "format": "decbytes",
+      "graphId": "diagram_8",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "init": {
+        "arrowMarkerAbsolute": true,
+        "cloneCssStyles": false,
+        "flowchart": {
+          "htmlLabels": true,
+          "useMaxWidth": true
+        },
+        "gantt": {
+          "barGap": 4,
+          "barHeight": 20,
+          "fontFamily": "\"Open-Sans\", \"sans-serif\"",
+          "fontSize": 11,
+          "gridLineStartPadding": 35,
+          "leftPadding": 75,
+          "numberSectionStyles": 3,
+          "titleTopMargin": 25,
+          "topPadding": 50
+        },
+        "logLevel": 3,
+        "sequenceDiagram": {
+          "actorMargin": 50,
+          "bottomMarginAdj": 1,
+          "boxMargin": 10,
+          "boxTextMargin": 5,
+          "diagramMarginX": 50,
+          "diagramMarginY": 10,
+          "height": 65,
+          "messageMargin": 35,
+          "mirrorActors": true,
+          "noteMargin": 10,
+          "useMaxWidth": true,
+          "width": 150
+        },
+        "startOnLoad": false
+      },
+      "legend": {
+        "avg": false,
+        "current": true,
+        "gradient": {
+          "enabled": true,
+          "show": true
+        },
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false
+      },
+      "links": [],
+      "mappingType": 1,
+      "maxDataPoints": 100,
+      "maxWidth": false,
+      "mermaidServiceUrl": "",
+      "metricCharacterReplacements": [],
+      "mode": "content",
+      "nullPointMode": "connected",
+      "seriesOverrides": [],
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "docker.container.labels.com_docker_swarm_service_name",
+              "id": "4",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "docker.memory.usage.total",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "metricset.module:docker AND metricset.name:memory",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [],
+          "timeField": "@timestamp"
+        }
+      ],
+      "thresholds": "0,2000000000",
+      "title": "Memory",
+      "type": "jdbranham-diagram-panel",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current",
+      "valueOptions": [
+        "avg",
+        "min",
+        "max",
+        "total",
+        "current"
+      ]
+    },
+    {
+      "colors": [
+        "rgba(50, 172, 45, 0.97)",
+        "rgba(237, 129, 40, 0.89)",
+        "rgba(245, 54, 54, 0.9)"
+      ],
+      "composites": [],
+      "content": "graph LR\nez-dash_python_app --> ez-dash_influxdb\nez-dash_python_app --> ez-dash_prometheus\nez-dash_metricbeat --> ez-dash_elasticsearch\nez-dash_elasticsearch --> ez-dash_grafana\nez-dash_elasticsearch --> ez-dash_kibana\nez-dash_influxdb --> ez-dash_grafana\nez-dash_prometheus --> ez-dash_grafana\n\n",
+      "datasource": "ElasticSearch",
+      "decimals": 2,
+      "format": "percentunit",
+      "graphId": "diagram_9",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 9,
+      "init": {
+        "arrowMarkerAbsolute": true,
+        "cloneCssStyles": false,
+        "flowchart": {
+          "htmlLabels": true,
+          "useMaxWidth": true
+        },
+        "gantt": {
+          "barGap": 4,
+          "barHeight": 20,
+          "fontFamily": "\"Open-Sans\", \"sans-serif\"",
+          "fontSize": 11,
+          "gridLineStartPadding": 35,
+          "leftPadding": 75,
+          "numberSectionStyles": 3,
+          "titleTopMargin": 25,
+          "topPadding": 50
+        },
+        "logLevel": 3,
+        "sequenceDiagram": {
+          "actorMargin": 50,
+          "bottomMarginAdj": 1,
+          "boxMargin": 10,
+          "boxTextMargin": 5,
+          "diagramMarginX": 50,
+          "diagramMarginY": 10,
+          "height": 65,
+          "messageMargin": 35,
+          "mirrorActors": true,
+          "noteMargin": 10,
+          "useMaxWidth": true,
+          "width": 150
+        },
+        "startOnLoad": false
+      },
+      "legend": {
+        "avg": false,
+        "current": true,
+        "gradient": {
+          "enabled": true,
+          "show": true
+        },
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false
+      },
+      "links": [],
+      "mappingType": 1,
+      "maxDataPoints": 100,
+      "maxWidth": false,
+      "mermaidServiceUrl": "",
+      "metricCharacterReplacements": [],
+      "mode": "content",
+      "nullPointMode": "connected",
+      "seriesOverrides": [],
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "docker.container.labels.com_docker_swarm_service_name",
+              "id": "4",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "docker.cpu.total.pct",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "metricset.module:docker AND metricset.name:cpu",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [],
+          "timeField": "@timestamp"
+        }
+      ],
+      "thresholds": "0,100",
+      "title": "CPU",
+      "type": "jdbranham-diagram-panel",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current",
+      "valueOptions": [
+        "avg",
+        "min",
+        "max",
+        "total",
+        "current"
+      ]
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -59,7 +397,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 9
       },
       "id": 2,
       "legend": {
@@ -205,7 +543,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 9
       },
       "id": 6,
       "legend": {
@@ -349,7 +687,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 18
       },
       "id": 4,
       "legend": {
@@ -566,5 +904,5 @@
   "timezone": "",
   "title": "Cluster Health",
   "uid": "Ncpt7Jiiz",
-  "version": 3
+  "version": 2
 }

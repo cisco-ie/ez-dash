@@ -41,7 +41,7 @@ def influx_server():
 
 @REQUEST_TIME.time()
 def stat_creation(i):
-    stat_1 = 10 + math.sin(math.radians(i)) * 10
+    stat_1 = 10 + math.sin(math.radians(i)) * 50
     stat_2 = random.randint(0, 200)
     return stat_1, stat_2
 
