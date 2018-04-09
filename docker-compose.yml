@@ -33,7 +33,6 @@ services:
       image: prom/prometheus
       volumes:
         - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
-        - "./prometheus/rules.d:/etc/prometheus/rules.d:ro"
       ports:
         - "9090:9090"
       depends_on:
@@ -60,4 +59,3 @@ services:
         - "9091:9091"
       depends_on:
         - influxdb
-        - elasticsearch
