@@ -356,7 +356,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(time() - process_start_time_seconds{job=\"example_app\"})",
+          "expr": "(time() - process_start_time_seconds{job=\"python_app\"})",
           "format": "time_series",
           "groupBy": [
             {
