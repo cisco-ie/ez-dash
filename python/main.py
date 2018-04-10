@@ -1,77 +1,107 @@
-from prometheus_client import start_http_server, Summary
-import threading
+#!/usr/bin/env python
+"""Simple Python application which exposes metrics to Prometheus
+and InfluxDB to populate pre-configured dashboards in Grafana.
+"""
+import logging
 import math
 import time
 import random
-import sys
-import http.client
+import prometheus_client as prometheus
 
-REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 
+REQUEST_TIME = prometheus.Summary('request_processing_seconds', 'Time spent processing request')
 
 def main():
-    """
-    Runs all functions required for exposing
-    """
+    """Entry point to example app."""
+    setup_logging(logging.DEBUG)
+    logging.info('Starting Prometheus Server')
+    start_prometheus()
+    logging.info('Starting metrics generation to InfluxDB')
+    start_metrics()
 
-    try:
-        print("Starting Prometheus Server")
-        prometheus_server()
-        print("Starting Influx Server")
-        t = threading.Thread(target=influx_server)
-        t.start()
+def setup_logging(level=logging.INFO):
+    """Setup logging to output to standard out."""
+    logging.basicConfig(level=level)
+    logging.getLogger('urllib3').setLevel(logging.WARNING)
 
-    except KeyboardInterrupt:
-        sys.exit()
+def start_prometheus(port=9091):
+    """Start the Prometheus HTTP server."""
+    prometheus.start_http_server(port)
 
-
-def prometheus_server():
-    start_http_server(9091)
-
-
-def influx_server():
+def start_metrics():
+    """Start generating metrics into InfluxDB."""
     count = 1
-    influx_controller = InfluxController('influxdb:8086')
+    influx_controller = InfluxController('http://influxdb:8086', 'devnet', 'create')
     while True:
-        stat_1, stat_2 = stat_creation(count)
-        influx_controller.send_data(stat_1, stat_2, count)
+        stats = {
+            'sinwave': calculate_sinwave(count),
+            'gauge': calculate_gauge(),
+            'counter': count
+        }
+        influx_controller.send_data(stats)
         count += 1
         time.sleep(1)
 
-
 @REQUEST_TIME.time()
-def stat_creation(i):
-    stat_1 = 10 + math.sin(math.radians(i)) * 50
-    stat_2 = random.randint(0, 200)
-    return stat_1, stat_2
+def calculate_sinwave(i):
+    """Create a sinusoidal statistic."""
+    return 10 + math.sin(math.radians(i)) * 50
 
+def calculate_gauge():
+    """Create fixed range statistic for gauge."""
+    return random.randint(0, 100)
 
+import requests
 class InfluxController():
-    def __init__(self, url, dbname='ezdash'):
+    """Custom class for writing data points to the InfluxDB HTTP API
+    due to Python client library not supporting versions above 1.3.
+    """
+
+    def __init__(self, url, username, password, dbname='ezdash'):
+        """Initialize with a URL, username, password, and database name."""
+        self.url = url
+        self.username = username
+        self.password = password
         self.dbname = dbname
-        self.conn = http.client.HTTPConnection(url)
+        self.conn = requests.Session()
 
     def write(self, payload):
-        headers = {
-            'authorization': "Basic ZGV2bmV0OmNyZWF0ZQ=="
-        }
-        self.conn.request("POST", "/write?db={}".format(self.dbname), payload, headers)
-        res = self.conn.getresponse()
-        data = res.read()
-        # print(res.code)
-        print(data.decode("utf-8"))
+        """Write to InfluxDB via HTTP API.
+        Effectively ripped from:
+        https://github.com/influxdata/influxdb-python/blob/master/influxdb/client.py#L243
+        https://docs.influxdata.com/influxdb/v1.5/tools/api/#write
+        """
+        try:
+            response = self.conn.request(
+                method='POST',
+                url=self.url + '/write',
+                auth=(self.username, self.password),
+                params={'db': self.dbname, 'precision': 'ms'},
+                data=payload
+            )
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+                requests.exceptions.Timeout):
+            raise
+        if response.status_code != 204:
+            logging.error(response.text)
 
     def format_data(self, key, value):
-        timestamp = int(time.time()) * 1000000000
-        data = "{},host=python value={} {}".format(key, value, timestamp)
-        # print(data)
+        """Format data to InfluxDB line format."""
+        timestamp = int(round(time.time() * 1000)) # Milliseconds
+        data = "{key},host=python value={value} {timestamp}".format(
+            key=key,
+            value=value,
+            timestamp=timestamp
+        )
         return data
-
-    def send_data(self, stat_1, stat_2, stat_3):
-        self.write(self.format_data('stat_1', stat_1))
-        self.write(self.format_data('stat_2', stat_2))
-        self.write(self.format_data('entriest_counter', stat_3))
-
+    
+    def send_data(self, kv_map):
+        """Send a KV map of data to InfluxDB for series storage."""
+        for key, value in kv_map.items():
+            self.write(
+                self.format_data(key, value)
+            )
 
 if __name__ == '__main__':
     main()
