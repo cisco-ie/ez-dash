@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-import threading
 import logging
 import math
 import time
 import random
-import sys
 import prometheus_client as prometheus
 
 
@@ -32,18 +30,23 @@ def start_metrics():
     count = 1
     influx_controller = InfluxController('http://influxdb:8086', 'devnet', 'create')
     while True:
-        stat_1, stat_2 = stat_creation(count)
-        influx_controller.send_data(stat_1, stat_2, count)
+        stats = {
+            'sinwave': calculate_sinwave(count),
+            'gauge': calculate_gauge(),
+            'counter': count
+        }
+        influx_controller.send_data(stats)
         count += 1
         time.sleep(1)
 
 @REQUEST_TIME.time()
-def stat_creation(i):
-    """Create a sinusoidal/random integer statistic."""
-    stat_1 = 10 + math.sin(math.radians(i)) * 50
-    stat_2 = random.randint(0, 200)
-    return stat_1, stat_2
+def calculate_sinwave(i):
+    """Create a sinusoidal statistic."""
+    return 10 + math.sin(math.radians(i)) * 50
 
+def calculate_gauge():
+    """Create fixed range statistic for gauge."""
+    return random.randint(0, 100)
 
 import requests
 class InfluxController():
@@ -60,6 +63,11 @@ class InfluxController():
         self.conn = requests.Session()
 
     def write(self, payload):
+        """Write to InfluxDB via HTTP API.
+        Effectively ripped from:
+        https://github.com/influxdata/influxdb-python/blob/master/influxdb/client.py#L243
+        https://docs.influxdata.com/influxdb/v1.5/tools/api/#write
+        """
         try:
             response = self.conn.request(
                 method='POST',
@@ -76,6 +84,7 @@ class InfluxController():
             logging.error(response.text)
 
     def format_data(self, key, value):
+        """Format data to InfluxDB line format."""
         timestamp = int(round(time.time() * 1000)) # Milliseconds
         data = "{key},host=python value={value} {timestamp}".format(
             key=key,
@@ -83,11 +92,13 @@ class InfluxController():
             timestamp=timestamp
         )
         return data
-
-    def send_data(self, stat_1, stat_2, stat_3):
-        self.write(self.format_data('stat_1', stat_1))
-        self.write(self.format_data('stat_2', stat_2))
-        self.write(self.format_data('entries_counter', stat_3))
+    
+    def send_data(self, kv_map):
+        """Send a KV map of data to InfluxDB for series storage."""
+        for key, value in kv_map.items():
+            self.write(
+                self.format_data(key, value)
+            )
 
 if __name__ == '__main__':
     main()
