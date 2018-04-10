@@ -27,7 +27,6 @@ def main():
     start_metrics()
 
 
-
 def setup_logging(level=logging.INFO):
     """Setup logging to output to standard out."""
     logging.basicConfig(level=level)
@@ -56,7 +55,6 @@ def start_metrics():
 
 def start_flask():
     app.run(host='0.0.0.0', debug=True, use_reloader=False)
-    return
 
 
 @app.route('/')
@@ -114,13 +112,12 @@ class InfluxController():
                 params={'db': self.dbname, 'precision': 'ms'},
                 data=payload
             )
+            if response.status_code != 204:
+                logging.error(response.text)
         except (requests.exceptions.ConnectionError,
                 requests.exceptions.HTTPError,
                 requests.exceptions.Timeout):
-            logging.error("Failed to connect")
-            time.sleep(2)
-        if response.status_code != 204:
-            logging.error(response.text)
+            logging.error('Failed to send payload to InfluxDB.')
 
     def format_data(self, key, value):
         """Format data to InfluxDB line format."""
@@ -138,6 +135,7 @@ class InfluxController():
             self.write(
                 self.format_data(key, value)
             )
+
 
 if __name__ == '__main__':
     main()
