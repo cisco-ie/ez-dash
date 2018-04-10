@@ -6,7 +6,7 @@ datasources:
   url: http://influxdb:8086
   user: devnet
   password: create
-  database: tutorial
+  database: ezdash
   isDefault: true
 - name: ElasticSearch
   type: elasticsearch
