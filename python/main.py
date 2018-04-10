@@ -6,27 +6,38 @@ import logging
 import math
 import time
 import random
+import requests
+import threading
 import prometheus_client as prometheus
+from flask import Flask
 
-
+app = Flask(__name__)
 REQUEST_TIME = prometheus.Summary('request_processing_seconds', 'Time spent processing request')
+APP_Gauge = prometheus.Gauge('flask_gauge', 'Flask input changing gauge')
+
 
 def main():
     """Entry point to example app."""
     setup_logging(logging.DEBUG)
+    logging.info('Starting Flask Server')
+    threading.Thread(target=start_flask).start()
     logging.info('Starting Prometheus Server')
     start_prometheus()
     logging.info('Starting metrics generation to InfluxDB')
     start_metrics()
+
+
 
 def setup_logging(level=logging.INFO):
     """Setup logging to output to standard out."""
     logging.basicConfig(level=level)
     logging.getLogger('urllib3').setLevel(logging.WARNING)
 
+
 def start_prometheus(port=9091):
     """Start the Prometheus HTTP server."""
     prometheus.start_http_server(port)
+
 
 def start_metrics():
     """Start generating metrics into InfluxDB."""
@@ -42,16 +53,40 @@ def start_metrics():
         count += 1
         time.sleep(1)
 
+
+def start_flask():
+    app.run(host='0.0.0.0', debug=True, use_reloader=False)
+    return
+
+
+@app.route('/')
+def flask_app():
+    return 'Welcome to DevNet Create'
+
+
+@app.route('/up')
+def flask_gauge_up():
+    APP_Gauge.inc()
+    return 'Incremented to {}'.format(APP_Gauge._value.get())
+
+
+@app.route('/down')
+def flask_gauge_down():
+    APP_Gauge.dec()
+    return 'Decremented to {}'.format(APP_Gauge._value.get())
+
+
 @REQUEST_TIME.time()
 def calculate_sinwave(i):
     """Create a sinusoidal statistic."""
     return 10 + math.sin(math.radians(i)) * 50
 
+
 def calculate_gauge():
     """Create fixed range statistic for gauge."""
     return random.randint(0, 100)
 
-import requests
+
 class InfluxController():
     """Custom class for writing data points to the InfluxDB HTTP API
     due to Python client library not supporting versions above 1.3.
@@ -82,7 +117,8 @@ class InfluxController():
         except (requests.exceptions.ConnectionError,
                 requests.exceptions.HTTPError,
                 requests.exceptions.Timeout):
-            raise
+            logging.error("Failed to connect")
+            time.sleep(2)
         if response.status_code != 204:
             logging.error(response.text)
 
