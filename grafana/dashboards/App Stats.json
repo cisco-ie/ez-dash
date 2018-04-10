@@ -1,20 +1,20 @@
 {
   "__inputs": [
     {
-      "name": "InfluxDB",
-      "label": "InfluxDB",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    },
-    {
       "name": "Prometheus",
       "label": "Prometheus",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
       "pluginName": "Prometheus"
+    },
+    {
+      "name": "InfluxDB",
+      "label": "InfluxDB",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
     }
   ],
   "__requires": [
@@ -77,22 +77,22 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "Prometheus",
       "format": "none",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
-        "show": true,
+        "show": false,
         "thresholdLabels": false,
         "thresholdMarkers": true
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 6,
         "x": 0,
         "y": 0
       },
-      "id": 20,
+      "id": 10,
       "interval": null,
       "links": [],
       "mappingType": 1,
@@ -126,9 +126,11 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "last",
+      "tableColumn": "",
       "targets": [
         {
+          "expr": "python_info",
+          "format": "time_series",
           "groupBy": [
             {
               "params": [
@@ -143,7 +145,8 @@
               "type": "fill"
             }
           ],
-          "measurement": "gauge",
+          "intervalFactor": 1,
+          "legendFormat": "{{implementation}}",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -158,15 +161,16 @@
               },
               {
                 "params": [],
-                "type": "last"
+                "type": "mean"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "thresholds": "50,80",
-      "title": "Gauge Stat (InfluxDB)",
+      "thresholds": "",
+      "title": "Implementation",
+      "transparent": false,
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -176,7 +180,120 @@
           "value": "null"
         }
       ],
-      "valueName": "current"
+      "valueName": "name"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": "Prometheus",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 14,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "python_info",
+          "format": "time_series",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "intervalFactor": 1,
+          "legendFormat": "{{version}}",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": "",
+      "title": "Version",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "name"
     },
     {
       "cacheTimeout": null,
@@ -414,22 +531,22 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "Prometheus",
+      "datasource": "InfluxDB",
       "format": "none",
       "gauge": {
         "maxValue": 100,
         "minValue": 0,
-        "show": false,
+        "show": true,
         "thresholdLabels": false,
         "thresholdMarkers": true
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
+        "w": 12,
         "x": 0,
         "y": 9
       },
-      "id": 10,
+      "id": 20,
       "interval": null,
       "links": [],
       "mappingType": 1,
@@ -463,11 +580,9 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "last",
       "targets": [
         {
-          "expr": "python_info",
-          "format": "time_series",
           "groupBy": [
             {
               "params": [
@@ -482,8 +597,7 @@
               "type": "fill"
             }
           ],
-          "intervalFactor": 1,
-          "legendFormat": "{{implementation}}",
+          "measurement": "gauge",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -498,16 +612,15 @@
               },
               {
                 "params": [],
-                "type": "mean"
+                "type": "last"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "thresholds": "",
-      "title": "Implementation",
-      "transparent": false,
+      "thresholds": "50,80",
+      "title": "Gauge Stat (InfluxDB)",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -517,11 +630,11 @@
           "value": "null"
         }
       ],
-      "valueName": "name"
+      "valueName": "current"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
+      "colorBackground": true,
       "colorValue": false,
       "colors": [
         "#299c46",
@@ -540,10 +653,10 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 6,
+        "x": 12,
         "y": 9
       },
-      "id": 14,
+      "id": 22,
       "interval": null,
       "links": [],
       "mappingType": 1,
@@ -575,12 +688,12 @@
         "fillColor": "rgba(31, 118, 189, 0.18)",
         "full": false,
         "lineColor": "rgb(31, 120, 193)",
-        "show": false
+        "show": true
       },
       "tableColumn": "",
       "targets": [
         {
-          "expr": "python_info",
+          "expr": "flask_gauge",
           "format": "time_series",
           "groupBy": [
             {
@@ -597,7 +710,6 @@
             }
           ],
           "intervalFactor": 1,
-          "legendFormat": "{{version}}",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -619,8 +731,8 @@
           "tags": []
         }
       ],
-      "thresholds": "",
-      "title": "Version",
+      "thresholds": "5,15",
+      "title": "Web Watcher (Prometheus)",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -630,88 +742,117 @@
           "value": "null"
         }
       ],
-      "valueName": "name"
+      "valueName": "current"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fill": 1,
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#cffaff",
+        "#052b51",
+        "#d44a3a"
+      ],
+      "datasource": "InfluxDB",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
       "gridPos": {
         "h": 9,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 9
       },
-      "id": 18,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
+      "id": 4,
+      "interval": null,
       "links": [],
-      "nullPointMode": "connected",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
+      "mappingType": 1,
+      "mappingTypes": [
         {
-          "expr": "request_processing_seconds_sum / request_processing_seconds_count",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Average Stat Gen (Prometheus)",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "name": "value to text",
+          "value": 1
         },
         {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "name": "range to text",
+          "value": 2
         }
-      ]
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "counter",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": "",
+      "title": "Number of Executions (InfluxDB)",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "avg"
     },
     {
       "gridPos": {
@@ -834,114 +975,85 @@
       ]
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": true,
-      "colorValue": false,
-      "colors": [
-        "#cffaff",
-        "#052b51",
-        "#d44a3a"
-      ],
-      "datasource": "InfluxDB",
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 1,
       "gridPos": {
         "h": 9,
         "w": 12,
         "x": 12,
         "y": 19
       },
-      "id": 4,
-      "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": true
+      "id": 18,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
       },
-      "tableColumn": "",
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "connected",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
       "targets": [
         {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "counter",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": []
+          "expr": "request_processing_seconds_sum / request_processing_seconds_count",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "B"
         }
       ],
-      "thresholds": "",
-      "title": "Number of Executions (InfluxDB)",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Average Stat Gen (Prometheus)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
         {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
-      ],
-      "valueName": "avg"
+      ]
     }
   ],
   "refresh": "5s",
