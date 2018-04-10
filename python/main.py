@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""Simple Python application which exposes metrics to Prometheus
+and InfluxDB to populate pre-configured dashboards in Grafana.
+"""
 import logging
 import math
 import time
