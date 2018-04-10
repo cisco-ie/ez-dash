@@ -945,7 +945,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "entriest_counter",
+          "measurement": "entries_counter",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",

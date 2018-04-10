@@ -5,7 +5,6 @@ import math
 import time
 import random
 import sys
-import http.client
 import prometheus_client as prometheus
 
 
@@ -31,7 +30,7 @@ def start_prometheus(port=9091):
 def start_metrics():
     """Start generating metrics into InfluxDB."""
     count = 1
-    influx_controller = InfluxController('influxdb:8086')
+    influx_controller = InfluxController('http://influxdb:8086', 'devnet', 'create')
     while True:
         stat_1, stat_2 = stat_creation(count)
         influx_controller.send_data(stat_1, stat_2, count)
@@ -40,26 +39,44 @@ def start_metrics():
 
 @REQUEST_TIME.time()
 def stat_creation(i):
+    """Create a sinusoidal/random integer statistic."""
     stat_1 = 10 + math.sin(math.radians(i)) * 50
     stat_2 = random.randint(0, 200)
     return stat_1, stat_2
 
+
+import requests
 class InfluxController():
-    def __init__(self, url, dbname='ezdash'):
+    """Custom class for writing data points to the InfluxDB HTTP API
+    due to Python client library not supporting versions above 1.3.
+    """
+
+    def __init__(self, url, username, password, dbname='ezdash'):
+        """Initialize with a URL, username, password, and database name."""
+        self.url = url
+        self.username = username
+        self.password = password
         self.dbname = dbname
-        self.conn = http.client.HTTPConnection(url)
+        self.conn = requests.Session()
 
     def write(self, payload):
-        headers = {
-            'authorization': "Basic ZGV2bmV0OmNyZWF0ZQ=="
-        }
-        self.conn.request("POST", "/write?db={}".format(self.dbname), payload, headers)
-        res = self.conn.getresponse()
-        data = res.read()
-        logging.debug(data.decode("utf-8"))
+        try:
+            response = self.conn.request(
+                method='POST',
+                url=self.url + '/write',
+                auth=(self.username, self.password),
+                params={'db': self.dbname, 'precision': 'ms'},
+                data=payload
+            )
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+                requests.exceptions.Timeout):
+            raise
+        if response.status_code != 204:
+            logging.error(response.text)
 
     def format_data(self, key, value):
-        timestamp = int(round(time.time() * 1e9)) # Nanoseconds
+        timestamp = int(round(time.time() * 1000)) # Milliseconds
         data = "{key},host=python value={value} {timestamp}".format(
             key=key,
             value=value,
@@ -70,7 +87,7 @@ class InfluxController():
     def send_data(self, stat_1, stat_2, stat_3):
         self.write(self.format_data('stat_1', stat_1))
         self.write(self.format_data('stat_2', stat_2))
-        self.write(self.format_data('entriest_counter', stat_3))
+        self.write(self.format_data('entries_counter', stat_3))
 
 if __name__ == '__main__':
     main()
