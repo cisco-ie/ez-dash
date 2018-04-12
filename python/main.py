@@ -59,7 +59,7 @@ def start_flask():
 
 @app.route('/')
 def flask_app():
-    return 'Welcome to DevNet Create'
+    return 'Welcome to DevNet Create! Go to http://localhost:5000/up or http://localhost:5000/down to increment or decrement the counter.'
 
 
 @app.route('/up')
