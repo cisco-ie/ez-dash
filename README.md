@@ -1,6 +1,6 @@
 # ez-dash
 **Dashboarding with Open-Source Monitoring Stacks Made Easy**  
-*DevNet Create 2018 - WS23, WS54* | [Presentation](Dashboarding%20with%20Open-Source%20Monitoring20Stacks%20Made%20Easy.pptx)
+*DevNet Create 2018 - WS23, WS54* | [Presentation](Dashboarding%20with%20Open-Source%20Monitoring%20Stacks%20Made%20Easy.pptx)
 
 Learn about the different open source tools like TICK, ELK, Prometheus, Grafana, and more - and how to make good looking dashboards of your environment without having to rebuild the wheel.
 
@@ -46,7 +46,7 @@ You're ready to workshop!
 ## Usage
 This stack should work across any OS that supports the prerequisited Docker CE installation. All processes are containerized and deployable via Docker Swarm. If you are running pre-existing Docker containers, ensure that there are no port conflicts in the `docker-compose.yml` file.
 
-Explanation of the components is provided in the [Dashboarding with Open-Source Monitoring Stacks Made Easy](Dashboarding%20with%20Open-Source%20Monitoring20Stacks%20Made%20Easy.pptx) PowerPoint.
+Explanation of the components is provided in the [Dashboarding with Open-Source Monitoring Stacks Made Easy](Dashboarding%20with%20Open-Source%20Monitoring%20Stacks%20Made%20Easy.pptx) PowerPoint.
 
 ### Get Started
 The following expects you to utilize a terminal of some kind, also known as command prompt in Windows.
